@@ -1,13 +1,18 @@
-import React, { Component } from 'react'
-import {Link} from "react-router-dom";
-
-
-    const Header = props => {
-        console.log('Navbar - Rendered');
+import React, { useEffect } from 'react';
+import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+import { getNumbers } from '../../actions/getAction';
         
+
+function Header(props) {
+
+        console.log(props);
+
+        useEffect(() => {
+            getNumbers();
+        }, [])
         return (    
 
-        <div>
             <div className="Home">
                 <div class="humberger__menu__overlay"></div>
                 <header class="header">
@@ -44,12 +49,6 @@ import {Link} from "react-router-dom";
                                         <div class="header__top__right__language">
                                             <img src="img/language.png" alt="" />
                                             <div>English</div>
-                                            
-                                            <ul>
-                                                <li>
-                                                    <Link to="#">English</Link>
-                                                </li>
-                                            </ul>
                                         </div>
                                         <div class="header__top__right__auth">
                                             <Link to="/login">
@@ -111,14 +110,20 @@ import {Link} from "react-router-dom";
                                         <li>
                                             <Link to="#">
                                                 <i class="fa fa-heart"></i>
-                                                <span>1</span>
+                                                <span>0</span>
                                             </Link>
                                         </li>
-                                        <li>
+                                        <li>{
+                                            props.basketProps.basketNumbers ? 
                                             <Link to="/shop_cart">
                                                 <i class="fa fa-shopping-bag"></i>
-                                                <span>{props.totalCounters}</span>
+                                                <span>{ props.basketProps.basketNumbers }</span>
+                                            </Link> : 
+                                            <Link>
+                                                <i class="fa fa-shopping-bag"></i>
+                                                <span>0</span>
                                             </Link>
+                                        }
                                         </li>
                                     </ul>
                                     <div class="header__cart__price">item: 
@@ -134,10 +139,16 @@ import {Link} from "react-router-dom";
                     </div>
                 </header>
             </div>
-        </div>
+
 
         );
-    }
- 
 
-export default Header;
+}
+    
+    const mapStateToProps = state => ({
+        basketProps: state.basketState
+
+    })
+
+
+export default connect(mapStateToProps, { getNumbers })(Header);
